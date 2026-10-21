@@ -12,4 +12,4 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     app_saas_ok = fields.Boolean('Enable CN SaaS', config_parameter='app_saas_ok',
-                                 help="Checked to Enable www.odooapp.cn cloud service.")
+                                 help="Checked to Enable www.hopesting.com cloud service.")

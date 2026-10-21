@@ -44,7 +44,7 @@ msgstr "勾选并保存，即可启用Odoo中文应用商店云服务"
 
 #. module: app_common
 #: model:ir.model.fields,help:app_common.field_res_config_settings__app_saas_ok
-msgid "Checked to Enable www.odooapp.cn cloud service."
+msgid "Checked to Enable www.hopesting.com cloud service."
 msgstr "勾选后启用Odoo中文应用商店云服务"
 
 #. module: app_common
@@ -96,10 +96,10 @@ msgstr "额外的销售配置参数"
 #: model_terms:ir.ui.view,arch_db:app_common.app_res_config_settings_view_form
 msgid ""
 "Get the Industry Apps, Themes and Support from China odooapp store.\n"
-"                                        https://www.odooapp.cn"
+"                                        https://www.hopesting.com"
 msgstr ""
 "获取Odoo行业应用，模块，主题。请访问Odoo中国应用商店\n"
-"                                        https://www.odooapp.cn"
+"                                        https://www.hopesting.com"
 
 #. module: app_common
 #: model:ir.model,name:app_common.model_ir_http
@@ -181,14 +181,14 @@ msgstr "本操作只对销售订单和采购订单生效"
 #: model_terms:ir.ui.view,arch_db:app_common.app_res_config_settings_view_form
 msgid ""
 "Visit our website for more apps and Support.\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\thttps://www.odooai.cn"
+"\t\t\t\t\t\t\t\t\t\t\t\t\thttps://www.hopesting.com"
 msgstr ""
 "欢迎访问欧度智能官方网站，获取Odoo企业级运营支持。\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t https://www.odooai.cn"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t https://www.hopesting.com"
 
 #. module: app_common
 #: model_terms:ir.ui.view,arch_db:app_common.app_res_config_settings_view_form
-msgid "https://www.odooapp.cn/apps/modules/app_saas"
+msgid "https://www.hopesting.com/apps/modules/app_saas"
 msgstr ""
 
 #. module: app_common

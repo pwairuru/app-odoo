@@ -1,30 +1,30 @@
 # -*- coding: utf-8 -*-
 
 # Created on 2023-02-02
-# author: 欧度智能，https://www.odooai.cn
+# author: 欧度智能，https://www.hopesting.com
 # email: 300883@qq.com
 # resource of odooai
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 # Odoo16在线用户手册（长期更新）
-# https://www.odooai.cn/documentation/16.0/zh_CN/index.html
+# https://www.hopesting.com/documentation/16.0/zh_CN/index.html
 
 # Odoo16在线开发者手册（长期更新）
-# https://www.odooai.cn/documentation/16.0/zh_CN/developer.html
+# https://www.hopesting.com/documentation/16.0/zh_CN/developer.html
 
 # Odoo13在线用户手册（长期更新）
-# https://www.odooai.cn/documentation/user/13.0/zh_CN/index.html
+# https://www.hopesting.com/documentation/user/13.0/zh_CN/index.html
 
 # Odoo13在线开发者手册（长期更新）
-# https://www.odooai.cn/documentation/13.0/index.html
+# https://www.hopesting.com/documentation/13.0/index.html
 
 # Odoo10在线中文用户手册（长期更新）
-# https://www.odooai.cn/documentation/user/10.0/zh_CN/index.html
+# https://www.hopesting.com/documentation/user/10.0/zh_CN/index.html
 
 # Odoo10离线中文用户手册下载
-# https://www.odooai.cn/odoo10_user_manual_document_offline/
+# https://www.hopesting.com/odoo10_user_manual_document_offline/
 # Odoo10离线开发手册下载-含python教程，jquery参考，Jinja2模板，PostgresSQL参考（odoo开发必备）
-# https://www.odooai.cn/odoo10_developer_document_offline/
+# https://www.hopesting.com/odoo10_developer_document_offline/
 
 ##############################################################################
 #    Copyright (C) 2009-TODAY odooai.cn Ltd. https://www.odooai.cn
@@ -38,18 +38,18 @@
 ##############################################################################
 
 {
-    'name': "欧度智能基础功能及面板,odooAi Common Util and Tools",
-    'version': '20.0.26.09.23',
-    'author': 'odooai.cn',
+    'name': "Odoo Debrand Common - 基础功能及面板, Common Util and Tools",
+    'version': '20.0.26.10.21',
+    'author': 'hopesting.com',
     'category': 'Extra tools',
-    'website': 'https://www.odooai.cn',
-    'live_test_url': 'https://demo.odooapp.cn',
+    'website': 'https://www.hopesting.com',
+    'live_test_url': 'https://demo.hopesting.com',
     'license': 'LGPL-3',
     'sequence': 2,
     'price': 0.00,
     'currency': 'EUR',
     'images': ['static/description/banner.png'],
-    'summary': "odooai.cn应用核心基础模块，提供通用工具函数和面板。Core module for odooai.cn apps with common utilities and tools.",
+    'summary': "hopesting.com应用核心基础模块，提供通用工具函数和面板。Core module for hopesting.com apps with common utilities and tools.",
     'description': '''
     1. Quick import data from excel with .py code.
     2. Quick m2o default value helper.

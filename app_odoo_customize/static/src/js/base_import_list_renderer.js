@@ -5,7 +5,7 @@ import { ImportModuleListRenderer } from "@base_import_module/base_import_list_r
 
 patch(ImportModuleListRenderer.prototype, {
     async onCellClicked(record, column, ev) {
-        if (record._values.module_type && record._values.module_type === 'odooapp.cn') {
+        if (record._values.module_type && record._values.module_type === 'hopesting.com') {
             const re_action = {
                 name: "more_info",
                 res_model: "ir.module.module",

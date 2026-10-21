@@ -52,7 +52,7 @@
                     <filter string="Addons Path" name="addons_path" domain="[]" context="{'group_by': 'addons_path_id'}" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//filter[@name='app']" position="before">
-                    <filter name="odooapp" string="Odoo中文应用" domain="[('module_type', '=', 'odooapp.cn')]"/>
+                    <filter name="odooapp" string="Odoo Debrand应用" domain="[('module_type', '=', 'odooapp.cn')]"/>
                 </xpath>
             </field>
         </record>
