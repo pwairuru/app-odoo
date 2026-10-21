@@ -26,13 +26,13 @@ class IrHttp(models.AbstractModel):
         result['app_show_support'] = config_parameter.get_str('app_show_support')
         result['app_show_account'] = config_parameter.get_str('app_show_account')
         result['app_show_poweredby'] = config_parameter.get_str('app_show_poweredby')
-        # 增加多语言
+        # Add multi-language
         result['app_lang_list'] = self.env['res.lang'].search_read([], ['id', 'code', 'name', 'flag_image_url'])
         result['is_erp_manager'] = self.env.user.has_group('base.group_erp_manager')
-        # 增加 bar位置处理
+        # Add navbar position handling
         result['app_navbar_pos_pc'] = config_parameter.get_str('app_navbar_pos_pc', 'top')
         result['app_navbar_pos_mobile'] = config_parameter.get_str('app_navbar_pos_mobile', 'top')
-        # 此处直接取，不用 session
+        # Read directly here, no session needed
         result['app_debug_only_admin'] = config_parameter.get_str('app_debug_only_admin')
         result['app_stop_subscribe'] = config_parameter.get_str('app_stop_subscribe')
         result['app_doc_root_url'] = config_parameter.get_str('app_doc_root_url', 'https://www.odoo.com')

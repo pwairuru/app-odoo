@@ -21,7 +21,7 @@ class ResConfigSettings(models.TransientModel):
                                     config_parameter='app_show_debug')
     app_show_documentation = fields.Boolean('Show Documentation', help="When enable,User can visit user manual",
                                             config_parameter='app_show_documentation')
-    # 停用
+    # Disabled
     app_show_documentation_dev = fields.Boolean('Show Developer Documentation',
                                                 help="When enable,User can visit development documentation")
     app_show_support = fields.Boolean('Show Support', help="When enable,User can vist your support site",
@@ -56,16 +56,16 @@ class ResConfigSettings(models.TransientModel):
         # ('left', 'Left'),
     ], config_parameter='app_navbar_pos_mobile')
     
-    # 安全与提速
+    # Security and speed
     app_debug_only_admin = fields.Boolean('Debug for Admin', config_parameter='app_debug_only_admin',
                                           help="Check to only Debug / Debug Assets for Odoo Admin. Deny debug from url for other user.")
     app_stop_subscribe = fields.Boolean('Stop Odoo Subscribe', help="Check to stop subscribe and follow. This to make odoo speed up.",
                                         config_parameter='app_stop_subscribe')
-    # 处理额外模块
+    # Handle extra modules
     module_app_odoo_doc = fields.Boolean("Help Document Anywhere", help='Get Help Documentation on current odoo operation or topic.')
     module_app_chatgpt = fields.Boolean("Ai Center", help='Use Ai to boost you business.')
     
-    # 应用帮助文档
+    # App help docs
     app_doc_root_url = fields.Char('Help of topic domain', config_parameter='app_doc_root_url', default='https://hopesting.com')
 
     @api.model
@@ -83,14 +83,14 @@ class ResConfigSettings(models.TransientModel):
                 pass
 
     def _check_clear_scope(self, method_name):
-        """如果 clear_scope 未设置，返回向导 action 让用户选择清除范围。"""
+        """If clear_scope is not set, return a wizard action to pick the clear scope."""
         if not self.env.context.get('clear_scope'):
             action = self.env['ir.actions.actions']._for_xml_id('app_odoo_customize.action_clear_data_wizard')
             action['context'] = {'clear_method': method_name}
             return action
         return None
 
-    # 清数据，o=对象, s=序列
+    # Clear data, o=objects, s=sequences
     def _remove_app_data(self, o, s=[], method_name=None):
         if method_name:
             wizard = self._check_clear_scope(method_name)
@@ -102,7 +102,7 @@ class ResConfigSettings(models.TransientModel):
         company_id = self.env.company.id if not global_clear else None
         failed_models = []
         for line in o:
-            # 检查是否存在
+            # Check it exists
             try:
                 ir_model = self.env['ir.model']._get(line)
                 if not ir_model:
@@ -113,32 +113,32 @@ class ResConfigSettings(models.TransientModel):
             obj_name = line
             obj = self.pool.get(obj_name)
             if not obj:
-                # 有时安装出错数据乱，没有 obj 但有 table
+                # A broken install may leave a table with no obj
                 t_name = obj_name.replace('.', '_')
             else:
                 t_name = obj._table
 
-            # 构建 DELETE 语句
+            # Build the DELETE statement
             where_clauses = []
             params = []
 
-            # 额外处理 template mixin 的数据,模板不删除
+            # Extra handling for template-mixin data, keep templates
             try:
                 if obj and hasattr(ir_model, 'is_mixin_template') and hasattr(obj, 'is_template'):
                     where_clauses.append("is_template is not true")
             except Exception as e:
                 _logger.exception('remove data error check is_template: %s', e)
 
-            # 多公司处理：检测 company_id 字段
+            # Multi-company: detect company_id field
             if not global_clear and obj and 'company_id' in obj._fields and obj._fields['company_id'].store:
                 where_clauses.append("company_id = %s")
                 params.append(company_id)
             elif not global_clear and obj and 'record_company_id' in obj._fields:
-                # mail.message 使用 record_company_id 代替 company_id
+                # mail.message uses record_company_id instead of company_id
                 where_clauses.append("record_company_id = %s")
                 params.append(company_id)
             elif not global_clear:
-                # 无公司字段的模型（如 mail.followers、mail.activity），公司模式下跳过不删
+                # Models without a company field (e.g. mail.followers, mail.activity) are skipped in company mode
                 continue
 
             sql = "delete from %s" % t_name
@@ -155,7 +155,7 @@ class ResConfigSettings(models.TransientModel):
                     pass
                 failed_models.append(line)
                 _logger.warning('remove data error: %s,%s', line, e)
-        # 更新序号
+        # Reset sequences
         for line in s:
             if global_clear:
                 domain = ['|', ('code', '=ilike', line + '%'), ('prefix', '=ilike', line + '%')]
@@ -188,7 +188,7 @@ class ResConfigSettings(models.TransientModel):
     
     def remove_sales(self):
         to_removes = [
-            # 清除销售单据
+            # Clear sale orders
             'sale.order.return.line',
             'sale.order.return',
             'helpdesk.ticket',
@@ -196,9 +196,9 @@ class ResConfigSettings(models.TransientModel):
             'sale.order.fix',
             'sale.order.line',
             'sale.order',
-            # 销售提成，自用
+            # Sales commission, internal use
             # 'sale.commission.line',
-            # 不能删除报价单模板
+            # Never delete quotation templates
             'sale.order.template.option',
             'sale.order.template.line',
             'sale.order.template',
@@ -212,7 +212,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_product(self):
         to_removes = [
-            # 清除产品数据
+            # Clear product data
             'product.product',
             'product.template',
         ]
@@ -223,7 +223,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_product_attribute(self):
         to_removes = [
-            # 清除产品属性
+            # Clear product attributes
             'product.attribute.value',
             'product.attribute',
         ]
@@ -232,7 +232,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_pos(self):
         to_removes = [
-            # 清除POS单据
+            # Clear POS orders
             'pos.payment',
             'pos.order.line',
             'pos.order',
@@ -245,7 +245,7 @@ class ResConfigSettings(models.TransientModel):
         if isinstance(res, dict):
             return res
 
-        # 更新要关帐的值，因为 store=true 的计算字段要重置
+        # Refresh closing values, stored computed fields must reset
 
         try:
             statement = self.env['account.bank.statement'].search([])
@@ -257,7 +257,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_purchase(self):
         to_removes = [
-            # 清除采购单据
+            # Clear purchase orders
             'purchase.order.return.line',
             'purchase.order.return',
             'helpdesk.ticket',
@@ -275,7 +275,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_expense(self):
         to_removes = [
-            # 清除
+            # Clear expenses
             'hr.expense.pc.use.plan',
             'hr.expense',
             'hr.expense.sheet',
@@ -289,7 +289,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_mrp(self):
         to_removes = [
-            # 清除生产单据
+            # Clear manufacturing orders
             'mrp.workcenter.productivity',
             'mrp.workorder',
             # 'mrp.production.workcenter.line',
@@ -297,7 +297,7 @@ class ResConfigSettings(models.TransientModel):
             'mrp.production',
             # 'mrp.production.product.line',
             'mrp.unbuild',
-            # 增加我们app模块
+            # Include our app modules
             'mrp.production.plan',
             'change.production.qty',
             'mrp.request.line',
@@ -316,7 +316,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_mrp_bom(self):
         to_removes = [
-            # 清除生产BOM
+            # Clear manufacturing BoMs
             'mrp.bom.line',
             'mrp.bom',
         ]
@@ -325,7 +325,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_inventory(self):
         to_removes = [
-            # 清除库存单据
+            # Clear inventory documents
             'stock.quant',
             'stock.move.line',
             'stock.package_level',
@@ -356,7 +356,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_account(self):
         to_removes = [
-            # 清除财务会计单据
+            # Clear accounting documents
             'payment.transaction',
             # 'account.voucher.line',
             # 'account.voucher',
@@ -378,7 +378,7 @@ class ResConfigSettings(models.TransientModel):
         if isinstance(res, dict):
             return res
 
-        # extra 更新序号
+        # Extra sequence reset
         global_clear = self.env.context.get('clear_scope') == 'global'
         if global_clear:
             domain = [
@@ -415,8 +415,8 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_account_chart(self):
         to_removes = [
-            # 清除财务科目，用于重设。有些是企业版的也处理下
-            # 辅助核算项是基础数据，都用手机工删除
+            # Clear chart of accounts for reset, including enterprise ones
+            # Analytic items are base data, delete manually
             # 'account.analytic.account',
             'account.report.budget.item',
             'account.report.budget',
@@ -443,8 +443,8 @@ class ResConfigSettings(models.TransientModel):
             return res
         global_clear = self.env.context.get('clear_scope') == 'global'
         company_id = self.env.company.id if not global_clear else None
-        # todo: 要做 remove_hr，因为工资表会用到 account
-        # 更新account关联，很多是多公司字段，故只存在 ir_property，故在原模型，只能用update
+        # todo: add remove_hr, payslips use accounts
+        # Update account links, many are multi-company fields kept in ir_property, so update on the model
         try:
             field1 = self.env['ir.model.fields']._get('product.template', "taxes_id").id
             field2 = self.env['ir.model.fields']._get('product.template', "supplier_taxes_id").id
@@ -466,13 +466,13 @@ class ResConfigSettings(models.TransientModel):
                 pass
             _logger.error('remove data error: %s,%s', 'account_chart: set tax and account_journal', e)
 
-        # 增加对 pos的处理
+        # Also handle POS
         if self.env['ir.model']._get('pos.config'):
             self.env['pos.config'].write({
                 'journal_id': False,
             })
-        #     todo: 以下处理参考 res.partner的合并，将所有m2o的都一次处理，不需要次次找模型
-        # partner 处理
+        #     todo: following res.partner merge, handle all m2o at once instead of per model
+        # Partner handling
         try:
             rec = self.env['res.partner'].search([])
             rec.write({
@@ -486,7 +486,7 @@ class ResConfigSettings(models.TransientModel):
             except Exception:
                 pass
             _logger.error('remove data error: %s,%s', 'account_chart', e)
-        # 品类处理
+        # Category handling
         try:
             rec = self.env['product.category'].search([])
             rec.write({
@@ -505,7 +505,7 @@ class ResConfigSettings(models.TransientModel):
             except Exception:
                 pass
             pass
-        # 产品处理
+        # Product handling
         try:
             rec = self.env['product.template'].search([])
             rec.write({
@@ -520,7 +520,7 @@ class ResConfigSettings(models.TransientModel):
             except Exception:
                 pass
             pass
-        # pos处理，清支付，清账本
+        # POS handling, clear payments and journals
         try:
             rec = self.env['pos.config'].search([])
             rec.write({
@@ -536,7 +536,7 @@ class ResConfigSettings(models.TransientModel):
             except Exception:
                 pass
             pass
-        # 日记账处理
+        # Journal handling
         try:
             rec = self.env['account.journal'].search([])
             rec.write({
@@ -555,7 +555,7 @@ class ResConfigSettings(models.TransientModel):
                 pass
             pass  # raise Warning(e)
 
-        # 库存计价处理
+        # Stock valuation handling
         try:
             rec = self.env['stock.location'].search([])
             rec.write({
@@ -569,9 +569,9 @@ class ResConfigSettings(models.TransientModel):
             except Exception:
                 pass
             pass  # raise Warning(e)
-        # 库存计价默认值处理
+        # Stock valuation defaults handling
         try:
-            # 当前有些日记账的默认值要在 ir.property 处理 _set_default，比较麻烦
+            # Some journal defaults live in ir.property _set_default, tricky
             todo_list = [
                 'property_stock_account_input_categ_id',
                 'property_stock_account_output_categ_id',
@@ -592,7 +592,7 @@ class ResConfigSettings(models.TransientModel):
             except Exception:
                 pass
             pass  # raise Warning(e)
-        # 先 unlink 处理
+        # Unlink first
         j_ids = self.env['account.journal'].sudo().search([])
         if j_ids:
             try:
@@ -619,7 +619,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_project(self):
         to_removes = [
-            # 清除项目
+            # Clear projects
             'account.analytic.line',
             'project.task',
             # 'project.forecast',
@@ -629,11 +629,11 @@ class ResConfigSettings(models.TransientModel):
             'project.milestone',
             # 'project.project.stage',
             'project.task.recurrence',
-            # 表名为 project_task_user_rel
+            # Table name is project_task_user_rel
             'project.task.stage.personal',
         ]
         seqs = []
-        # 先缓存所有 project 的 alias_id，清除 project 记录后再清除对应的 mail.alias
+        # Cache all project alias_ids first, delete the mail.alias records after deleting projects
         alias_ids = []
         try:
             projects = self.env['project.project'].sudo().with_context(active_test=False).search([])
@@ -643,7 +643,7 @@ class ResConfigSettings(models.TransientModel):
         res = self._remove_app_data(to_removes, seqs, 'remove_project')
         if isinstance(res, dict):
             return res
-        # 清除项目记录后，清除之前缓存的 alias_id
+        # After deleting project records, delete the cached alias_ids
         if alias_ids:
             try:
                 aliases = self.env['mail.alias'].sudo().browse(alias_ids).exists()
@@ -656,7 +656,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_quality(self):
         to_removes = [
-            # 清除质检数据
+            # Clear quality data
             'quality.check',
             'quality.alert',
             # 'quality.point',
@@ -675,7 +675,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_quality_setting(self):
         to_removes = [
-            # 清除质检设置
+            # Clear quality settings
             'quality.point',
             'quality.alert.stage',
             'quality.alert.team',
@@ -687,7 +687,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_event(self):
         to_removes = [
-            # 清除
+            # Clear events
             'website.event.menu',
             'event.sponsor',
             'event.sponsor.type',
@@ -729,7 +729,7 @@ class ResConfigSettings(models.TransientModel):
     
     def remove_website_blog(self):
         to_removes = [
-            # 清除网站数据，w, w_blog
+            # Clear website data, w, w_blog
             'blog.tag.category',
             'blog.tag',
             'blog.post',
@@ -750,7 +750,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_website(self):
         to_removes = [
-            # 清除网站基础
+            # Clear website base
             'blog.blog',
             'product.wishlist',
             'website.published.multi.mixin',
@@ -768,7 +768,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_message(self):
         to_removes = [
-            # 清除消息数据
+            # Clear message data
             'mail.message',
             'mail.followers',
             'mail.activity',
@@ -778,7 +778,7 @@ class ResConfigSettings(models.TransientModel):
 
     def remove_workflow(self):
         to_removes = [
-            # 清除工作流
+            # Clear workflows
             # 'wkf.workitem',
             # 'wkf.instance',
         ]
@@ -849,7 +849,7 @@ class ResConfigSettings(models.TransientModel):
         }
 
     def action_mark_database_as_production(self):
-        """将数据库转换为生产库。注意：已匿名化或删除的数据无法恢复！各个功能如邮件、支付等的参数需要重新配置。"""
+        """Mark the database as production. Note: anonymized or deleted data cannot be recovered! Reconfigure mail, payment and similar settings."""
         if not self._app_check_sys_op():
             raise UserError(_('Not allow.'))
         try:

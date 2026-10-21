@@ -9,7 +9,7 @@ class AppHome(Home):
 
     @http.route()
     def web_client(self, s_action=None, **kw):
-        # todo: 当前只对 web，要调整为也对 website
+        # todo: currently web only, extend to website too
         res = super(AppHome, self).web_client(s_action, **kw)
 
         if kw.get('debug', False):

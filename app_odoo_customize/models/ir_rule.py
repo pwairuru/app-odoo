@@ -11,9 +11,9 @@ class IrRule(models.Model):
     
 
     def _make_access_error(self, operation, records):
-        # todo: 当前此处不生效
+        # todo: currently ineffective
         if self.env.user.has_group('base.group_no_one'):
-            # 在用户端处理更详细的错误信息
+            # Show more detailed error messages on the client
             _logger.warning('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, records.ids[:6], self._uid, records._name)
             self = self.with_context(self.env.user.context_get())
     

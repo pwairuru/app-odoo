@@ -10,7 +10,7 @@ class IrMailServer(models.Model):
     _inherit = 'ir.mail_server'
     _order = 'sequence'
     
-    # 改默认发邮件逻辑
+    # Change default send logic
     @api.model
     def send_email(self, message, mail_server_id=None, smtp_server=None, smtp_port=None,
                    smtp_user=None, smtp_password=None, smtp_encryption=None,
@@ -18,15 +18,15 @@ class IrMailServer(models.Model):
                    smtp_debug=False, smtp_session=None):
         email_to = message['To']
         
-        # 忽略掉无效email，避免被ban
+        # Skip invalid emails to avoid being banned
         if email_to:
             BLOCK_EMAIL_PATTERNS = [
-                re.compile(r'example\.com'),                     # 阻止包含example.的邮箱
-                re.compile(r'@sunpop\.cn'),                   # 阻止sunpop.cn域名
-                re.compile(r'@odooapp\.cn'),                  # 阻止odooapp.cn域名
+                re.compile(r'example\.com'),                     # Block example. addresses
+                re.compile(r'@sunpop\.cn'),                   # Block sunpop.cn domain
+                re.compile(r'@odooapp\.cn'),                  # Block odooapp.cn domain
             ]
             
-            # 检查是否匹配阻止的邮箱模式
+            # Check against blocked email patterns
             is_blocked = any(pattern.search(email_to) for pattern in BLOCK_EMAIL_PATTERNS)
             
             if is_blocked:

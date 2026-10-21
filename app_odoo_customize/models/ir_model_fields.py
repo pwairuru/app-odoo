@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 class IrModelFields(models.Model):
     _inherit = 'ir.model.fields'
 
-    # 调整显示 field name，要覆盖原模型的
+    # Show field name instead, must override the base model
     def name_get(self):
         res = []
         if self._context.get('show_field_description_only', False) == True:
@@ -21,7 +21,7 @@ class IrModelFields(models.Model):
                 res.append((field.id, '%s (%s,%s)' % (field.field_description, field.name, field.model)))
         return res
 
-    # 调整可按 field name查询
+    # Allow searching by field name
     @api.model
     def name_search(self, name, domain=None, operator='ilike', limit=100):
         """

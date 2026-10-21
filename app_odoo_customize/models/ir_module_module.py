@@ -20,7 +20,7 @@ class IrModuleModule(models.Model):
     addons_path_id = fields.Many2one('ir.module.addons.path', string='Addons Path ID', readonly=True)
     addons_path = fields.Char(string='Addons Path', related='addons_path_id.path', readonly=True)
     license = fields.Char(readonly=True)
-    module_type = fields.Selection(selection_add=[('odooapp.cn', 'Odoo Debrand应用')], default='official')
+    module_type = fields.Selection(selection_add=[('odooapp.cn', 'Odoo Debrand Apps')], default='official')
 
     def module_multi_uninstall(self):
         """ Perform the various steps required to uninstall a module completely
@@ -30,7 +30,7 @@ class IrModuleModule(models.Model):
         modules = self.browse(self.env.context.get('active_ids'))
         [module.button_immediate_uninstall() for module in modules if module not in ['base', 'web']]
 
-    # 更新翻译，当前语言
+    # Refresh translations, current language
     def module_multi_refresh_po(self):
         lang = self.env.user.lang
         modules = self.filtered(lambda r: r.state == 'installed')
@@ -47,18 +47,18 @@ class IrModuleModule(models.Model):
                 }
             }
 
-        # 先清理, odoo原生经常清理不干净
-        # odoo 16中，不再使用 ir.translation，直接使用json字段
+        # Clean up first, core cleanup often misses things
+        # Since Odoo 16, ir.translation is gone, json fields are used directly
         # for rec in modules:
         #     translate = self.env['ir.translation'].search([
         #         ('lang', '=', lang),
         #         ('module', '=', rec.name)
         #     ])
         #     translate.sudo().unlink()
-        # 再重载
+        # Then reload
         modules._update_translations(filter_lang=lang, overwrite=True)
 
-        # Odoo 20: Registry.clear_cache 移除，改为 transaction.invalidate_ormcache 按缓存名逐个清理
+        # Odoo 20: Registry.clear_cache removed, use transaction.invalidate_ormcache per cache name
         self.env.transaction.invalidate_ormcache('default')
         self.env.transaction.invalidate_ormcache('templates')
 
@@ -76,7 +76,7 @@ class IrModuleModule(models.Model):
 
     @assert_log_admin_access
     def button_immediate_upgrade(self):
-        # 升级前都先更新 .po
+        # Always refresh .po before upgrade
         res = self.module_multi_refresh_po()
         return super(IrModuleModule, self).button_immediate_upgrade()
 
@@ -93,7 +93,7 @@ class IrModuleModule(models.Model):
         default_version = modules.adapt_version('1.0')
         known_mods = self.with_context(lang=None).search([])
         known_mods_names = {mod.name: mod for mod in known_mods}
-        # 处理可更新字段， 不要compute，会出错
+        # Handle updatable fields, no compute or it breaks
         for mod_name in modules.get_modules():
             mod = known_mods_names.get(mod_name)
             if mod:

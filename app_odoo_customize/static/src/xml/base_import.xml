@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-<!--    todo: 当前无效-->
+<!--    todo: currently inactive-->
 <!--	<t t-inherit="base_import.ImportAction" t-inherit-mode="extension" owl="1">-->
 <!--		<xpath expr="//DocumentationLink" position="attributes">-->
 <!--            <attribute name="path">'https://www.hopesting.com/documentation/16.0/applications/general/export_import_data.html'</attribute>-->

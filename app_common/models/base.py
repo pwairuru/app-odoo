@@ -21,7 +21,7 @@ from ..lib.user_agents import parse
 
 _logger = logging.getLogger(__name__)
 
-# 常规的排除的fields
+# Routinely excluded fields
 EXCLU_FIELDS = [
     '__last_update',
     'access_token',
@@ -91,14 +91,14 @@ class Base(models.AbstractModel):
     @api.model
     def _app_dt2local(self, dt_value, return_format=False):
         """
-        将带时区的日期时间转换为当前用户 env 时区并格式化为字符串
-        :param dt_value: 输入的日期时间（没时区时默认UTC，来自数据库）
-        :param format_str: 输出格式字符串，如 '%Y-%m-%d %H:%M:%S，默认用 env.lang 的设置
-        :return: 指定用户时区下的格式化时间字符串
+        Convert a datetime with timezone to the current user env timezone and format as string
+        :param dt_value: input datetime (naive datetimes default to UTC, from the database)
+        :param format_str: output format string, e.g. '%Y-%m-%d %H:%M:%S, defaults to env.lang settings
+        :return: formatted time string in the given user timezone
         """
         if not dt_value:
             return dt_value
-        # 处理默认格式
+        # Handle default format
         if not return_format:
             lang_obj = self.env.ref('base.lang_zh_CN')
             lang_ref = 'base.lang_%s' % self.env.lang
@@ -108,14 +108,14 @@ class Base(models.AbstractModel):
                 pass
             return_format = '%s %s' % (lang_obj.date_format, lang_obj.time_format)
 
-        # 用户时区，默认中国
+        # User timezone, defaults to China
         local_tz = pytz.timezone(self.env.user.tz or 'Etc/GMT-8')
         
-        # 如果输入是字符串，先解析为datetime对象, 假设输入是标准的数据库时间格式
+        # If input is a string, parse it to datetime first, assuming standard database time format
         if isinstance(dt_value, str):
             dt_value = datetime.strptime(dt_value, return_format)
             
-        # 设置原始时区为UTC（PostgreSQL数据库通常存储UTC时间）
+        # Set source timezone to UTC (PostgreSQL usually stores UTC)
         if dt_value.tzinfo is None:
             dt_value = pytz.utc.localize(dt_value)
         
@@ -125,14 +125,14 @@ class Base(models.AbstractModel):
     @api.model
     def _app_dt2utc(self, dt_value, return_format=False):
         """
-        将带时区的日期时间转换为标准 utc 时间，并格式化为字符串
-        :param dt_value: 输入的日期时间（没时区时默认用户时区，来自数据库）
-        :param format_str: 输出格式字符串，如 '%Y-%m-%d %H:%M:%S，默认用 env.lang 的设置
-        :return: 指定用户时区下的格式化时间字符串
+        Convert a datetime with timezone to standard UTC and format as string
+        :param dt_value: input datetime (naive datetimes default to the user timezone, from the database)
+        :param format_str: output format string, e.g. '%Y-%m-%d %H:%M:%S, defaults to env.lang settings
+        :return: formatted time string in the given user timezone
         """
         if not dt_value:
             return dt_value
-        # 处理默认格式
+        # Handle default format
         if not return_format:
             lang_obj = self.env.ref('base.lang_zh_CN')
             lang_ref = 'base.lang_%s' % self.env.lang
@@ -142,14 +142,14 @@ class Base(models.AbstractModel):
                 pass
             return_format = '%s %s' % (lang_obj.date_format, lang_obj.time_format)
 
-        # 用户时区，默认中国
+        # User timezone, defaults to China
         local_tz = pytz.timezone(self.env.user.tz or 'Etc/GMT-8')
         
-        # 如果输入是字符串，先解析为datetime对象, 假设输入是标准的数据库时间格式, 时区为默认用户时区
+        # If input is a string, parse it to datetime first, assuming standard database time format in the default user timezone
         if isinstance(dt_value, str):
             dt_value = datetime.strptime(dt_value, return_format)
             
-        # 设置原始时区为用户时区（PostgreSQL数据库通常存储UTC时间）
+        # Set source timezone to the user timezone (PostgreSQL usually stores UTC)
         if dt_value.tzinfo is None:
             dt_value = local_tz.localize(dt_value)
         
@@ -158,7 +158,7 @@ class Base(models.AbstractModel):
 
     @api.model
     def _get_image_from_url(self, url):
-        # 返回这个图片的base64编码
+        # Return the base64 encoding of this image
         if not self._app_check_sys_op():
             return False
         return get_image_from_url(url)
@@ -166,7 +166,7 @@ class Base(models.AbstractModel):
     @api.model
     def _get_image_url2attachment(self, url, mimetype_list=None):
         # Todo: mimetype filter
-        # 根据远程url生成本地附件，当前主要处理 image
+        # Generate a local attachment from a remote url, mainly for images for now
         if not self._app_check_sys_op():
             return False
         image, file_name = get_image_url2attachment(url)
@@ -182,7 +182,7 @@ class Base(models.AbstractModel):
                     'public': True,
                 }
                 if hasattr(attachment, 'is_from_remote'):
-                    # 处理先找历史已存附件
+                    # First look for a previously stored attachment
                     res.update({
                         'is_from_remote': True,
                         'remote_url': url,
@@ -250,7 +250,7 @@ class Base(models.AbstractModel):
     
     @api.model
     def deep_merge(self, a, b):
-        # todo: 此处只处理2级，后续如需更深级别可以使用第三方库
+        # todo: only 2 levels handled here, use a third-party lib for deeper levels
         # from deepmerge import always_merger
         return deep_merge(a, b)
 
@@ -260,7 +260,7 @@ class Base(models.AbstractModel):
             domain = []
         ref_value = vals.get(ref)
         if ref_value is None:
-            raise UserError(_('创建或更新时，必须提供关键字段信息: %s') % ref)
+            raise UserError(_('Key field info is required when creating or updating: %s') % ref)
 
         search_domain = Domain.AND([domain, [(ref, '=', ref_value)]])
         record = self.search(search_domain, limit=1)
@@ -285,34 +285,34 @@ class Base(models.AbstractModel):
         return records
     
     def _app_sanitize_filename(self, filename):
-        """将字符串转换为安全的文件名，去掉非法字符并避免乱码
+        """Convert a string to a safe filename, stripping illegal chars and avoiding mojibake
 
-        :param filename: 原始文件名字符串
-        :return: 清理后的安全文件名
+        :param filename: original filename string
+        :return: cleaned safe filename
         """
         if not filename:
             return 'unnamed'
         
-        # 1. Unicode标准化，将字符转换为NFKC形式（兼容性分解后再组合）
+        # 1. Unicode normalize, convert chars to NFKC form (compatibility decomposition then composition)
         sanitized = unicodedata.normalize('NFKC', filename)
         
-        # 2. 替换常见的非法文件名字符为下划线或连字符
-        # Windows和Unix系统不允许的字符: < > : " / \ | ? *
-        # 同时替换空格、制表符等为连字符
+        # 2. Replace common illegal filename chars with underscore or hyphen
+        # Chars not allowed on Windows and Unix: < > : " / \ | ? *
+        # Also replace spaces, tabs, etc. with hyphens
         sanitized = re.sub(r'[<>:"/\\|?*]', '_', sanitized)
         sanitized = re.sub(r'[\s\t]+', '-', sanitized)
         
-        # 3. 移除控制字符和其他不可打印字符（保留中文、英文、数字、常见符号）
+        # 3. Strip control chars and other non-printables (keep CJK, latin, digits, common symbols)
         sanitized = re.sub(r'[\x00-\x1f\x7f-\x9f]', '', sanitized)
         
-        # 4. 移除开头和结尾的空格、点号、连字符、下划线
+        # 4. Strip leading/trailing spaces, dots, hyphens, underscores
         sanitized = sanitized.strip(' ._-')
         
-        # 5. 如果文件名为空，返回默认名称
+        # 5. Return a default name if the filename is empty
         if not sanitized:
             return 'unnamed'
         
-        # 6. 限制文件名长度（Windows最大255字符，留一些空间给扩展名和前缀）
+        # 6. Limit filename length (Windows max 255 chars, leave room for extension and prefix)
         if len(sanitized) > 200:
             sanitized = sanitized[:200]
         
@@ -324,14 +324,14 @@ def get_image_from_url(url):
     if url.startswith('//') or url.startswith('http://') or url.startswith('https://'):
         pass
     else:
-        # 处理相对路径
+        # Handle relative paths
         web_base_url = request.env['ir.config_parameter'].sudo().get_str('web.base.url', '')
         url = web_base_url + url
     try:
         response = requests.get(url, timeout=5)
     except Exception as e:
         return None
-    # 返回这个图片的base64编码
+    # Return the base64 encoding of this image
     return base64.b64encode(BytesIO(response.content).read())
 
 
@@ -344,7 +344,7 @@ def get_image_url2attachment(url):
         response = requests.get(url, timeout=90)
     except Exception as e:
         return None, None
-    # 返回这个图片的base64编码
+    # Return the base64 encoding of this image
     image = base64.b64encode(BytesIO(response.content).read())
     file_name = url.split('/')[-1]
     return image, file_name
@@ -384,61 +384,61 @@ def get_video_url2attachment(url):
 def get_ua_type():
     ua = request.httprequest.headers.get('User-Agent')
     ua_parse = str(parse(ua))
-    # 临时用 agent 处理，后续要前端中正确处理或者都从后台来
-    # 微信浏览器
+    # Temporary agent handling, handle properly in frontend or all in backend later
+    # WeChat browser
     #  MicroMessenger: Mozilla/5.0 (Linux; Android 10; ELE-AL00 Build/HUAWEIELE-AL00; wv)
     # AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120
     # MQQBrowser/6.2 TBS/045525 Mobile Safari/537.36 MMWEBID/3135 MicroMessenger/8.0.2.1860(0x2800023B) Process/tools WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64
-    # 微信浏览器，开发工具，网页 iphone
+    # WeChat browser, devtools, web iphone
     # ,Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1
     # wechatdevtools/1.03.2011120 MicroMessenger/7.0.4 Language/zh_CN webview/16178807094901773
     # webdebugger port/27772 token/b91f4a234b918f4e2a5d1a835a09c31e
 
-    # 微信小程序
+    # WeChat mini-program
     # MicroMessenger: Mozilla/5.0 (Linux; Android 10; ELE-AL00 Build/HUAWEIELE-AL00; wv)
     # AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/78.0.3904.62 XWEB/2767 MMWEBSDK/20210302 Mobile Safari/537.36 MMWEBID/6689 MicroMessenger/8.0.2.1860(0x2800023B) Process/appbrand2 WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64
     # MiniProgramEnv/android
     # 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_7_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.37(0x18002529) NetType/WIFI Language/zh_CN'
-    # 微信浏览器，开发工具，小程序，iphone
+    # WeChat browser, devtools, mini-program, iphone
     # Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1
     # wechatdevtools/1.03.2011120 MicroMessenger/7.0.4 Language/zh_CN webview/
-    # 微信内，iphone web
+    # Inside WeChat, iphone web
     # Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
     # MicroMessenger/8.0.3(0x1800032a) NetType/WIFI Language/zh_CN
-    # 安卓app,h5
+    # Android app, h5
     # ELE-AL00(Android/10) (cn.erpapp.o20sticks.App/13.20.12.09) Weex/0.26.0 1080x2265
 
-    # web 表示普通浏览器，后续更深入处理
+    # web means a regular browser, refine later
     utype = 'web'
-    # todo: 引入现成 py lib，处理企业微信
+    # todo: adopt a ready py lib for WeChat Work
     if 'MicroMessenger' in ua and 'webdebugger' not in ua \
         and ('miniProgram' in ua or 'MiniProgram' in ua or 'MiniProgramEnv' in ua or 'wechatdevtools' in ua):
-        # 微信小程序及开发者工具
+        # WeChat mini-program and devtools
         utype = 'wxapp'
     elif 'wxwork' in ua:
         utype = 'wxwork'
     elif 'MicroMessenger' in ua:
-        # 微信浏览器
+        # WeChat browser
         utype = 'wxweb'
     elif 'DingTalk' in ua:
         utype = 'dingtalk'
     elif 'cn.erpapp.o20sticks.App' in ua:
-        # 安卓app
+        # Android app
         utype = 'native_android'
     elif 'BytedanceWebview' in ua:
         utype = 'dyweb'
     elif 'Chrome Mobile' in ua_parse or 'Mobile Safari' in ua_parse:
-    #     增加移动端 web
+    #     Add mobile web
         utype = 'mweb'
     # _logger.warning('=========get ua %s,%s' % (utype, ua))
     return utype
 
 def deep_merge(a, b):
     """
-    深度合并两个二级 dict，对数值进行叠加，以b为主。
-    如果 a 和 b 有相同的键，则对它们的值进行合并；
-    如果值是 dict，则递归处理；
-    否则将 b 的值更新至 a 上。
+    Deep-merge two 2-level dicts, summing numbers, b wins.
+    If a and b share keys, merge their values;
+    if a value is a dict, recurse;
+    otherwise update a with the value from b.
     """
     for key in b:
         if key in a:

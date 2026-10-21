@@ -9,8 +9,8 @@
             <field name="name">Show Quick Upgrade in Apps Dashboard</field>
             <field name="privilege_id" ref="app_common.res_groups_privilege_ui"/>
         </record>
-        <!--系统设置默认值-->
-        <!--1 默认显示快速升级-->
+        <!--System setting defaults-->
+        <!--1 Show quick upgrade by default-->
         <record id="base.group_user" model="res.groups">
             <field name="implied_ids"
                    eval="[(4, ref('app_odoo_customize.group_show_quick_upgrade'))]"/>

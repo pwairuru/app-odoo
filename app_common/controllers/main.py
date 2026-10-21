@@ -22,10 +22,10 @@ class AppController(http.Controller):
         if not url:
             return None
         try:
-            response = requests.get(url)  # 将这个图片保存在内存
+            response = requests.get(url)  # Keep this image in memory
         except Exception as e:
             return None
-        # 返回这个图片的base64编码
+        # Return the base64 encoding of this image
         return base64.b64encode(BytesIO(response.content).read())
 
     @http.route(['/my/ua'], auth='public', methods=['GET'], sitemap=False)
@@ -41,20 +41,20 @@ class AppController(http.Controller):
         return get_ua_type()
 
 def haversine(lon1, lat1, lon2, lat2):
-    # 计算地图上两点的距离
-    # in:经度1，纬度1，经度2，纬度2 （十进制度数）
-    # out: 距离（米）
+    # Distance between two points on the map
+    # in: lon1, lat1, lon2, lat2 (decimal degrees)
+    # out: distance (meters)
     """
     Calculate the great circle distance between two points
     on the earth (specified in decimal degrees)
     """
-    # 将十进制度数转化为弧度
+    # Convert decimal degrees to radians
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
     
-    # haversine公式
+    # haversine formula
     dlon = lon2 - lon1
     dlat = lat2 - lat1
     a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
     c = 2 * asin(sqrt(a))
-    r = 6371  # 地球平均半径，单位为公里
+    r = 6371  # Mean earth radius, in km
     return c * r * 1000

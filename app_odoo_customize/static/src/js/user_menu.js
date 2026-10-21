@@ -22,9 +22,9 @@ patch(UserMenu.prototype, {
         self.app_show_lang = session.app_show_lang;
         self.app_lang_list = session.app_lang_list;
         self.user_lang = session.bundle_params.lang;
-        //todo: 演习 shortCutsItem 中的用法，当前是直接 xml 写了展现
+        //todo: demo of shortCutsItem usage, currently rendered directly in xml
 
-        //修正 bug，在移动端不会关闭本身
+        //Fix bug: menu does not close itself on mobile
         //o_burger_menu position-fixed top-0 bottom-0 start-100 d-flex flex-column flex-nowrap burgerslide burgerslide-enter-active
         function preferencesItem(env) {
             return {
@@ -43,7 +43,7 @@ patch(UserMenu.prototype, {
                         ;
                     }
                     env.services.action.doAction(actionDescription);
-                    //修正 bug，在移动端不会关闭本身
+                    //Fix bug: menu does not close itself on mobile
                 },
                 sequence: 50,
             };
@@ -98,7 +98,7 @@ patch(UserMenu.prototype, {
                 user.userId, {'lang': lang_code}
             ]);
             location.reload();
-            // 调用 action , 要先定义 self.action = useService("action")
+            // To call an action, define self.action = useService("action") first
             // self.action.action({
             //     type: 'ir.actions.client',
             //     tag: 'reload_context',
@@ -212,7 +212,7 @@ function odooAccountItem(env) {
 }
 
 function refresh_current(env) {
-    //移动端，主要为了小程序
+    //Mobile, mainly for mini-programs
     "use strict";
     const ui = env.services.ui;
     return {

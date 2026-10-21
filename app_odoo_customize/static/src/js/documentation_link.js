@@ -1,6 +1,6 @@
 /** @odoo-module **/
 /* jshint esversion: 6 */
-/* author: 欧度智能，https://www.hopesting.com
+/* author: Hopesting, https://www.hopesting.com
  * License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
  *
  * Patch the native DocumentationLink widget to use the configurable

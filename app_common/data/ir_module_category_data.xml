@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data noupdate="0">
-        <!-- 更好的group分类， 全局级别的扩展选项。非公司级，纳入base.group_no_one的-->
-        <!-- 销售扩展选项-->
+        <!-- Better group categories, global-level extension options. Non-company level, under base.group_no_one-->
+        <!-- Sales extension options-->
         <record id="module_category_sale_option" model="ir.module.category">
             <field name="name">Sale Option Extra</field>
             <field name="description">Extra sale option setup</field>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <!--    改顺序-->
+    <!--    Reorder-->
     <record id="app_view_server_action_tree" model="ir.ui.view">
         <field name="name">app.ir.actions.server.tree</field>
         <field name="model">ir.actions.server</field>

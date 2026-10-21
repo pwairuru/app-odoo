@@ -6,7 +6,7 @@ from . import ir_http
 from . import ir_model_fields
 from . import ir_module_addons_path
 from . import ir_module_module
-# todo: 当前此处不生效，故停用先
+# todo: currently ineffective, disabled for now
 # from . import ir_rule
 from . import web_environment_ribbon_backend
 from . import mail_thread

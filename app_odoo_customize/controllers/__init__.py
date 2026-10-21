@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-# todo: website 有bug oauth
+# todo: website oauth bug
 from . import controllers

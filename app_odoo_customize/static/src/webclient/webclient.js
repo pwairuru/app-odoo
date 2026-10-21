@@ -7,7 +7,7 @@ import { session } from "@web/session";
 
 patch(WebClient.prototype, {
     setup() {
-        // 处理 navbar 全局可配置位置
+        // Handle globally configurable navbar position
         super.setup();
         const ui = useService("ui");
         this.state.navbar_pos_pc = session.app_navbar_pos_pc || 'top';

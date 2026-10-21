@@ -10,7 +10,7 @@
                 <group name="app_biz" string="Business Config">
                 </group>
             </xpath>
-<!--            独立业务配置group-->
+<!--            Standalone business settings group-->
             <xpath expr="//group[@name='app_biz']" position="inside">
                 <field name="currency_id" position="move"/>
             </xpath>

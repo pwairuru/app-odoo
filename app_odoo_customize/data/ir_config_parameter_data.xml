@@ -14,7 +14,7 @@
         <function model="ir.config_parameter" name="set_str" eval="('app_documentation_url', 'https://www.hopesting.com/r/yh19')"/>
         <function model="ir.config_parameter" name="set_str" eval="('app_documentation_dev_url', 'https://www.hopesting.com/r/kf19')"/>
         <function model="ir.config_parameter" name="set_str" eval="('app_support_url', 'https://www.hopesting.com/trial')"/>
-        <function model="ir.config_parameter" name="set_str" eval="('app_account_title', 'Hopesting服务中心')"/>
+        <function model="ir.config_parameter" name="set_str" eval="('app_account_title', 'Hopesting Service Center')"/>
         <function model="ir.config_parameter" name="set_str" eval="('app_account_url', 'https://www.hopesting.com/my')"/>
         <function model="ir.config_parameter" name="set_str" eval="('app_enterprise_url', 'https://www.hopesting.com')"/>
         <function model="ir.config_parameter" name="set_str" eval="('app_doc_root_url', 'https://www.hopesting.com')"/>

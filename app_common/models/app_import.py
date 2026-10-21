@@ -12,13 +12,13 @@ def app_quick_import(env, content_path, sep=None, context={}):
     file_name = dir_split[2]
     file_base, file_type = os.path.splitext(content_path)
     model_name = file_name.replace(file_type, '')
-    # Odoo 17.0+ 弃用 modules.get_module_resource，改用 tools.misc.file_path
+    # Odoo 17.0+ deprecated modules.get_module_resource, use tools.misc.file_path
     full_path = misc.file_path(content_path)
     with open(full_path, 'rb') as f:
         content = f.read()
     uid = SUPERUSER_ID
     if model_name == 'discuss.channel':
-        # todo: 创建discuss.channel时，如果用root用户会报错
+        # todo: creating discuss.channel as root raises an error
         uid = 2
     if file_type == '.csv':
         file_type = 'text/csv'

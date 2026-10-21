@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 def app_relaxng(view_type):
     """ Return a validator for the given view type, or None. """
     if view_type not in _relaxng_cache:
-        # tree, search 特殊
+        # tree and search need special handling
         if view_type in ['list', 'search']:
             _file = file_path('app_common/rng/%s_view.rng' % view_type)
         else:
