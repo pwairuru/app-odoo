@@ -23,7 +23,7 @@
 
 {
     'name': 'Odoo Debrand - White-label, UI, Security, Boost and Data Tools',
-    'version': '20.0.26.10.22',
+    'version': '20.0.26.11.10',
     'author': 'hopesting.com',
     'category': 'Extra Tools',
     'website': 'https://www.hopesting.com',

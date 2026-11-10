@@ -3,14 +3,14 @@
     <!--    Handle title and theme-color-->
     <template id="app_layout" inherit_id="web.layout" name="app Web layout">
         <xpath expr="//title" position="replace">
-            <title t-out="title or 'Hoteli'"/>
+            <title t-out="title or 'Esidai'"/>
         </xpath>
     </template>
     <!--    end-->
     <template id="replace_login" name="Login Layout" inherit_id="web.login_layout">
         <xpath expr="//a[@target='_blank']" position="replace">
             <a href="https://www.hopesting.com" target="_blank">Powered by
-                <span>Hoteli</span>
+                <span>colorchase</span>
             </a>
         </xpath>
     </template>

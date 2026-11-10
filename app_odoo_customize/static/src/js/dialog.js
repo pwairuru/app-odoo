@@ -7,7 +7,7 @@ import { session } from "@web/session";
 patch(Dialog.prototype, {
     setup() {
         super.setup();
-        const app_system_name = session.app_system_name || "Hoteli";
+        const app_system_name = session.app_system_name || "Esidai";
         this.title = app_system_name;
     },
     

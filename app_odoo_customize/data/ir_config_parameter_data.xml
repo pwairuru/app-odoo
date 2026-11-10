@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
     <data noupdate="1">
-        <function model="ir.config_parameter" name="set_str" eval="('app_system_name', 'Hoteli')"/>
+        <function model="ir.config_parameter" name="set_str" eval="('app_system_name', 'Esidai')"/>
         <function model="ir.config_parameter" name="set_bool" eval="('app_show_lang', True)"/>
         <function model="ir.config_parameter" name="set_bool" eval="('app_show_debug', True)"/>
         <function model="ir.config_parameter" name="set_bool" eval="('app_show_documentation', True)"/>
@@ -18,7 +18,7 @@
         <function model="ir.config_parameter" name="set_str" eval="('app_account_url', 'https://www.hopesting.com/my')"/>
         <function model="ir.config_parameter" name="set_str" eval="('app_enterprise_url', 'https://www.hopesting.com')"/>
         <function model="ir.config_parameter" name="set_str" eval="('app_doc_root_url', 'https://www.hopesting.com')"/>
-        <function model="ir.config_parameter" name="set_str" eval="('app_ribbon_name', 'Hoteli')"/>
+        <function model="ir.config_parameter" name="set_str" eval="('app_ribbon_name', 'Esidai')"/>
         <function model="ir.config_parameter" name="set_str" eval="('app_ribbon_color', '#f0f0f0')"/>
         <function model="ir.config_parameter" name="set_str" eval="('app_ribbon_background_color', 'rgba(255,0,0,.4)')"/>
         <function model="ir.config_parameter" name="set_str" eval="('app_navbar_pos_pc', 'top')"/>

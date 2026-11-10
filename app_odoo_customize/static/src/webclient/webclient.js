@@ -20,7 +20,7 @@ patch(WebClient.prototype, {
             document.body.className += ' navbar_pos_bottom';
         }
 
-        const app_system_name = session.app_system_name || 'Hoteli';
+        const app_system_name = session.app_system_name || 'Esidai';
         // zopenerp is easy to grep
         this.title.setParts({ zopenerp: app_system_name });
 
